@@ -3,6 +3,8 @@ npm install express mongoose dotenv cors
 
 npm install @clerk/express@1.7.0 @arcjet/node@1.0.0-beta.8 @arcjet/inspect@1.0.0-beta.8
 
+npm install express-async-handler@1.2.0 cloudinary@2.0.0 multer@2.0.1
+
 
 
 
