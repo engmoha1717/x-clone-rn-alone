@@ -5,11 +5,17 @@ import SignOutButton from '@/components/SignOutButton'
 import {  RefreshControl, ScrollView, Text, View } from "react-native";
 import PostComposer from "@/components/PostComposer";
 import PostsList from "@/components/PostsList";
+import { useUserSync } from "@/hooks/useUserSync";
+
 
 const HomeScreen = () => {
   const [isRefetching, setIsRefetching] = useState(false);
 
   const handlePullToRefresh=async ()=>{}
+
+
+  useUserSync();
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-row justify-between items-center px-4 py-3 border-b border-gray-100">
