@@ -1,7 +1,7 @@
 import { useAuth } from '@clerk/clerk-expo';
 import axios ,{ AxiosInstance } from 'axios';
-// const API_BASE_URL =  process.env.EXPO_PUBLIC_API_URL || "https://x-clone-rn-alone.vercel.app/api";
-const API_BASE_URL = "https://x-clone-rn-alone.vercel.app/api";
+const API_BASE_URL =  process.env.EXPO_PUBLIC_API_URL || "https://x-clone-rn-alone.vercel.app/api";
+// const API_BASE_URL = "https://x-clone-rn-alone.vercel.app/api";
 
 export const createApiClient = (getToken: () => Promise<string | null>): AxiosInstance => {
   const api = axios.create({ baseURL: API_BASE_URL });
