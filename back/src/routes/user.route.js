@@ -1,5 +1,4 @@
 import express from "express";
-
 import {
   followUser,
   getCurrentUser,
@@ -8,7 +7,8 @@ import {
   updateProfile,
 } from "../controllers/user.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
-const router  = express.Router()
+
+const router = express.Router();
 
 // public route
 router.get("/profile/:username", getUserProfile);
@@ -19,5 +19,4 @@ router.get("/me", protectRoute, getCurrentUser);
 router.put("/profile", protectRoute, updateProfile);
 router.post("/follow/:targetUserId", protectRoute, followUser);
 
-
-export default router
+export default router;

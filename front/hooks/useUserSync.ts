@@ -1,19 +1,20 @@
-import { useApiClient, userApi } from "@/app/utils/api";
-import { useAuth } from "@clerk/clerk-expo";
-import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-expo";
+import { useApiClient, userApi } from "../utils/api";
 
 export const useUserSync = () => {
-    const { isSignedIn } = useAuth();
-    const api = useApiClient();
+  const { isSignedIn } = useAuth();
+  const api = useApiClient();
 
-    const syncUserMutation = useMutation({
-    mutationFn :()=> userApi.syncUser(api),
+  const syncUserMutation = useMutation({
+    mutationFn: () => userApi.syncUser(api),
     onSuccess: (response: any) => console.log("User synced successfully:", response.data.user),
     onError: (error) => console.error("User sync failed:", error),
   });
-   // auto-sync user when signed in
-   useEffect(() => {
+
+  // auto-sync user when signed in
+  useEffect(() => {
     // if user is signed in and user is not synced yet, sync user
     if (isSignedIn && !syncUserMutation.data) {
       syncUserMutation.mutate();
@@ -21,5 +22,42 @@ export const useUserSync = () => {
   }, [isSignedIn]);
 
   return null;
+};
 
-}
+
+
+
+
+
+
+
+
+
+
+
+// import { useApiClient, userApi } from "@/utils/api";
+// import { useAuth } from "@clerk/clerk-expo";
+// import { useMutation } from "@tanstack/react-query";
+// import { useEffect } from "react";
+
+// export const useUserSync = () => {
+//     const { isSignedIn } = useAuth();
+//     const api = useApiClient();
+
+//     const syncUserMutation = useMutation({
+//     mutationFn :()=> userApi.syncUser(api),
+//     onSuccess: (response: any) => console.log("User synced successfully:", response.data.user),
+//     onError: (error) => console.error("User sync failed:", error),
+//   });
+//    // auto-sync user when signed in
+//    useEffect(() => {
+//     // if user is signed in and user is not synced yet, sync user
+//     if (isSignedIn && !syncUserMutation.data) {
+//       syncUserMutation.mutate();
+//     }
+//   // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [isSignedIn]);
+
+//   return null;
+
+// }
