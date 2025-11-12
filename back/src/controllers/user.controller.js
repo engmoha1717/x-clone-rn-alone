@@ -24,29 +24,50 @@ export const updateProfile = asyncHandler(async (req, res) => {
 });
 
 export const syncUser = asyncHandler(async (req, res) => {
-  const { userId } = getAuth(req);
+  try {
+    console.log("🔄 Starting user sync...");
+    
+    const { userId } = getAuth(req);
+    console.log("📋 User ID from token:", userId);
 
-  // check if user already exists in mongodb
-  const existingUser = await User.findOne({ clerkId: userId });
-  if (existingUser) {
-    return res.status(200).json({ user: existingUser, message: "User already exists" });
+    if (!userId) {
+      console.error("❌ No userId found");
+      return res.status(401).json({ error: "No user ID" });
+    }
+
+    // check if user already exists in mongodb
+    console.log("🔍 Checking if user exists...");
+    const existingUser = await User.findOne({ clerkId: userId });
+    if (existingUser) {
+      console.log("✅ User already exists:", existingUser.username);
+      return res.status(200).json({ user: existingUser, message: "User already exists" });
+    }
+
+    // create new user from Clerk data
+    console.log("📞 Fetching user from Clerk...");
+    const clerkUser = await clerkClient.users.getUser(userId);
+    console.log("✅ Clerk user fetched:", clerkUser.emailAddresses[0]?.emailAddress);
+
+    const userData = {
+      clerkId: userId,
+      email: clerkUser.emailAddresses[0].emailAddress,
+      firstName: clerkUser.firstName || "",
+      lastName: clerkUser.lastName || "",
+      username: clerkUser.emailAddresses[0].emailAddress.split("@")[0],
+      profilePicture: clerkUser.imageUrl || "",
+    };
+    console.log("📝 User data prepared:", userData);
+
+    console.log("💾 Creating user in database...");
+    const user = await User.create(userData);
+    console.log("✅ User created successfully:", user.username);
+
+    res.status(201).json({ user, message: "User created successfully" });
+  } catch (error) {
+    console.error("❌ SYNC USER ERROR:", error.message);
+    console.error("📋 Full error:", error);
+    throw error; // asyncHandler will catch this
   }
-
-  // create new user from Clerk data
-  const clerkUser = await clerkClient.users.getUser(userId);
-
-  const userData = {
-    clerkId: userId,
-    email: clerkUser.emailAddresses[0].emailAddress,
-    firstName: clerkUser.firstName || "",
-    lastName: clerkUser.lastName || "",
-    username: clerkUser.emailAddresses[0].emailAddress.split("@")[0],
-    profilePicture: clerkUser.imageUrl || "",
-  };
-
-  const user = await User.create(userData);
-
-  res.status(201).json({ user, message: "User created successfully" });
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
