@@ -17,10 +17,11 @@ export const useUserSync = () => {
   // auto-sync user when signed in
   useEffect(() => {
     // if user is signed in and user is not synced yet, sync user
-    if (isSignedIn && !syncUserMutation.data) {
+    if (isSignedIn && !syncUserMutation.data && !syncUserMutation.isSuccess && !syncUserMutation.isPending ) {
       syncUserMutation.mutate();
     }
   }, [isSignedIn]);
 
   return null;
 };
+
